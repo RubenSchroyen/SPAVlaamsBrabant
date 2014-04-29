@@ -13,7 +13,7 @@ import be.kuleuven.cs.som.annotate.*;
  *
  */
 
-public class Food 
+public class Food extends GameObject
 {
 	/**
 	 * The World in which the food exists.
@@ -69,11 +69,12 @@ public class Food
 	 * @post		World of the food is set to the given world
 	 *
 	 */
-	public Food(World world, double x, double y) 
-	{
-		this.setPosX(x);
-		this.setPosY(y);
-		this.setWorld(world);
+
+
+
+	public Food(World world, double posX, double posY, double radius) {
+		super(world, posX, posY, radius);
+		// TODO Auto-generated constructor stub
 	}
 
 

@@ -18,7 +18,7 @@ import worms.util.Util;
  *
  */
 
-public class Projectile 
+public class Projectile extends MovableObject
 {	
 	/**
 	 * The World in which the projectile exists.
@@ -96,42 +96,14 @@ public class Projectile
 
 
 
-	/**
-	 * Creates a projectile and sets the parameters to the given values.
-	 * 
-	 * @param worm
-	 * 			the worm who fired the projectile.
-	 * 
-	 * @throws IllegalArgumentException
-	 * 		If the position of the projectile is not a valid position.
-	 * 			| !(worm.isValidPosition(worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius()), worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius())))
-	 * 
-	 * @pre isValidPosition(getPosX(),getposY())
-	 * 
-	 * @post projectile has been given an owner.
-	 * 			| new.worm = worm
-	 * 
-	 * @post X-coordinate of the projectile is set to the X-coordinate of the edge of the worm. 
-	 * 			| new.getPosX() == worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius())
-	 * 
-	 * @post Y-coordinate of the projectile is set to the X-coordinate of the edge of the worm. 
-	 * 			| new.getPosY() == worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius())
-	 * 
-	 * @post World of the projectile is set to the world where the worm exists.
-	 * 			| new.getWorld() == worm.getWorld()
-	 */
-	public Projectile(Worm worm) throws IllegalArgumentException
-	{
-		this.worm = worm;
-		if (worm.isValidPosition(worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius()), worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius())))
-		{	
-			this.setPosX(worm.getPosX() + Math.cos(worm.getAngle() * worm.getRadius()));
-			this.setPosY(worm.getPosY() + Math.sin(worm.getAngle() * worm.getRadius()));
-		}
-		else 
-			throw new IllegalArgumentException("Not a valid position for projectile");
-		this.setWorld(worm.getWorld());
+	
+
+
+	public Projectile(World world, double posX, double posY, double radius,double angle) {
+		super(world, posX, posY, radius, angle);
+		// TODO Auto-generated constructor stub
 	}
+
 
 
 	/**
@@ -461,7 +433,7 @@ public class Projectile
 	 * 		|new.force = force
 	 */
 	@Basic @Model
-	private void setForce(double force) 
+	public void setForce(double force) 
 	{
 		this.force = force;	
 	}
@@ -475,7 +447,7 @@ public class Projectile
 	 * @return force
 	 */
 	@Basic @Raw
-	private double getForce()
+	public double getForce()
 	{
 		return force;
 	}
@@ -538,7 +510,7 @@ public class Projectile
 	 * 
 	 */
 	@Basic @Model
-	private void setTime(double time) 
+	public void setTime(double time) 
 	{
 		this.time = time;
 	}
@@ -584,7 +556,7 @@ public class Projectile
 	 * @return distance
 	 */
 	@Basic @Raw
-	private double getTime() 
+	public double getTime() 
 	{
 		return time;
 	}
@@ -602,7 +574,7 @@ public class Projectile
 	 * 			| new.getVelocity == velocity
 	 */
 	@Basic @Model
-	private void setVelocity(double velocity) 
+	public void setVelocity(double velocity) 
 	{
 		this.velocity = velocity;
 	}   
@@ -638,7 +610,7 @@ public class Projectile
 	 * 
 	 * @return velocity
 	 */
-	private double getVelocity() 
+	public double getVelocity() 
 	{
 		return velocity;
 	}

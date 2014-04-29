@@ -58,7 +58,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 
-public class Worm 
+public class Worm extends MovableObject
 {                    
 
 
@@ -153,67 +153,13 @@ public class Worm
 	private double time;
 
 
-	/**
-	 * Creates the worm with some initialization parameters.
-	 * 
-	 * @param world
-	 * 			creates the worm in a chosen world
-	 * 
-	 * @param x
-	 * 			creates the worm in a position on the X-axis of the world
-	 * 
-	 * @param y
-	 * 			creates the worm in a position on the Y-axis of the world
-	 * 
-	 * @param angle
-	 * 			creates the worm with an initial angle of direction
-	 *
-	 * @param radius
-	 * 			creates the worm with an initial radius
-	 * 
-	 * @param name 
-	 * 			creates the worm with a given name
-	 * 
-	 * @pre given radius must be valid
-	 * 		| isValidRadius(radius)
-	 * 
-	 * @pre given name must be valid
-	 * 		| isValidName(name)
-	 * 
-	 * @pre given orientation is valid
-	 * 		| isValidAngle(angle)
-	 * 
-	 * @post X-coordinate is set to given value
-	 * 		| new.getPosX() == x
-	 * 
-	 * @post Y-coordinate is set to given value
-	 * 		| new.getPosY() == y
-	 * 
-	 * @post radius of the worm is set to given value
-	 * 		| new.getRadius() == radius
-	 * 
-	 * @post name of the worm is set to the given string if name is valid
-	 * 		| new.getName() == name
-	 * 
-	 * @post number of action points is set to the maximum number of action points a worm can have 
-	 * 		| new.getCurrentAP() == this.getMaxAP()
-	 * 
-	 * @post number of hitpoints is set to the maximum number of hitpoints a worm can have
-	 * 		| new.getHP() == this.getMaxHP()
-	 * 
-	 * @post world of this worm is set to the chosen world
-	 * 		| new.getWorld()  == world
-	 */ 
-	public Worm(World world, double x, double y, double radius, double angle, String name)
-	{
-		this.setPosX(x);
-		this.setPosY(y);
-		this.setRadius(radius);
-		this.setAngle(angle);
-		this.setName(name);
-		this.setCurrentAP(this.getMaxAP());
-		this.setHP(this.getMaxHP());
-		this.setWorld(world);
+
+
+
+
+	public Worm(World world, double posX, double posY, double radius, double angle) {
+		super(world, posX, posY, radius, angle);
+		
 	}
 
 
@@ -412,7 +358,7 @@ public class Worm
 	{
 		if (isValidTurn(newangle) == true )    
 		{
-			this.angle = this.getAngle() + newangle;
+			super.setAngle(super.getAngle() + newangle);
 			this.currentAP = this.getCurrentAP() - calculateApCostTurn(Math.abs(newangle - this.angle));    
 		}
 		else
@@ -678,9 +624,9 @@ public class Worm
 	 * 		| new.getForce() == force
 	 */
 	@Basic @Model
-	public void setForce(double force) 
+	public void setForce() 
 	{
-		this.force = force;
+		super.force = 5*this.getCurrentAP() + this.getMass() * g;
 	}
 
 
@@ -705,38 +651,14 @@ public class Worm
 	 * 		| new.getVelocity() == velocity
 	 */
 	@Basic @Model
-	public void setVelocity(double velocity) 
+	public void setVelocity() 
 	{
-		this.velocity = velocity;
+		super.velocity = this.getForce() * 0.5 / this.getMass();
 	}
 
 
 
-	/**
-	 * This method recalls the value of the distance a worm jumps
-	 */
-	@Basic @Raw
-	public double getDistance() 
-	{
-		return distance;
-	}
-
-	/**
-	 * This method sets the value for the distance a worm jumps
-	 * 
-	 * @param distance
-	 * 		the distance a worm jumps
-	 * 
-	 * @post
-	 * 		Sets the value of distance a worm jumps to the newly calculated or given distance
-	 * 		| new.getDistance() == distance
-	 */
-	@Basic @Model
-	public void setDistance(double distance) 
-	{
-		this.distance = distance;
-	}
-
+	
 
 
 	/**
@@ -1012,14 +934,14 @@ public class Worm
 		{
 			if (this.getSelectedWeapon() == "Bazooka")
 			{
-				Projectile projectile = new Projectile(this);
+				Projectile projectile = new Projectile(this.getWorld(),this.getPosX(),this.getPosY(),this.getRadius(), this.getAngle());
 				projectile.shootBazooka(propulsionYield, projectile);
 				this.setCurrentAP(this.getCurrentAP() - 50);
 			}
 
 			if (this.getSelectedWeapon() == "Rifle")
 			{
-				Projectile projectile = new Projectile(this);
+				Projectile projectile = new Projectile(this.getWorld(),this.getPosX(),this.getPosY(),this.getRadius(), this.getAngle());
 				projectile.shootRifle(projectile);
 				this.setCurrentAP(this.getCurrentAP() - 10);
 			}
@@ -1411,63 +1333,13 @@ public class Worm
 		double begin = this.getPosY();
 		if (this.canJump())
 		{
-			double[] jumpStep = new double[2];
-			jumpStep = this.JumpStep(this.JumpTime(delta));
-			this.setPosX(jumpStep[0]);
-			this.setPosY(jumpStep[1]);
-			this.setCurrentAP(0);
-			if (this.getPosY() < begin)
-				this.setHP((int) Math.floor(this.getHP() - 3*(begin - this.getPosY())));
+			super.Jump(delta);
 		}
 		lookForFood();
 	}
 
 
-	/**
-	 * This method calculates the in-air time
-	 * 
-	 * @param delta
-	 * 		
-	 * @return
-	 * 		jumpTime
-	 */
-	public double JumpTime(double delta)
-	{
-		double X = this.getPosX();
-		double Y = this.getPosY();
-		double[] jumpStepResult = new double[2];
-		double jumpTime = 0;
-		while (getWorld().isPassable(X, Y, this.getRadius()))
-		{
-			jumpStepResult = this.JumpStep(jumpTime);
-			X = jumpStepResult[0];
-			Y = jumpStepResult[1];
-			jumpTime += delta;
-		}
-		return jumpTime;
-	}
 
-	/**
-	 * This method calculates the position in air for the object
-	 * 
-	 * @param DeltaT
-	 *		The steps in time to calculate the position 
-	 *
-	 * @return
-	 * 		jumpStep
-	 */
-	public double[] JumpStep(double DeltaT)
-	{       
-		this.setForce(5*this.getCurrentAP() + this.getMass() * g);
-		this.setVelocity(this.getForce() * 0.5 / this.getMass());
-		double velocityX = this.getVelocity() * Math.cos(this.getAngle());
-		double velocityY = this.getVelocity() * Math.sin(this.getAngle());
-		double x = this.getPosX() + (velocityX * DeltaT);
-		double y = this.getPosY() + (velocityY * DeltaT - 0.5*g*Math.pow(DeltaT, 2));
-
-		double[] jumpstep = new double[] {x,y};
-
-		return jumpstep;
 
 	}
-}
+
