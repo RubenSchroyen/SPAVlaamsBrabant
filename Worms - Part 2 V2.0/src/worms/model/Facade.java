@@ -14,7 +14,7 @@ public class Facade implements IFacade
 	@Override
 	public Worm createWorm(World world, double x, double y, double direction, double radius, String name) 
 	{
-		Worm worm = new Worm(world, x , y, radius, direction, "Default");
+		Worm worm = new Worm(world, x , y, radius, direction);
 		worm.setHP(worm.getMaxHP());
 		worm.setCurrentAP(worm.getMaxAP());
 		return worm;
@@ -432,14 +432,14 @@ public class Facade implements IFacade
 	@Override
 	public Food createFood(World world, double x, double y) 
 	{
-		Food food = new Food(world, x, y);
+		Food food = new Food(world, x, y,0.20);
 		return food;
 	}
 
 	@Override
 	public Projectile createProjectile(World world, double x, double y) 
 	{
-		Projectile projectile = new Projectile(world.currentWorm());
+		Projectile projectile = new Projectile(world,x , y, 0.0, 0.0 );
 		return projectile;
 	}
 

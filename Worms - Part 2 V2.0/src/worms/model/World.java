@@ -416,7 +416,7 @@ public class World
 		double randomRadius = RandomGenerator.nextDouble() * 0.75 + 0.25;
 
 
-		Worm worm = new Worm(this, randomPositionX, randomPositionY, randomRadius, randomAngle, "Press N to rename");
+		Worm worm = new Worm(this, randomPositionX, randomPositionY, randomRadius, randomAngle);
 		worm.setPosX(this.findAdjacentX(worm, randomPositionX));
 		worm.setPosY(this.findAdjacentY(worm, randomPositionY));
 
@@ -719,7 +719,7 @@ public class World
 		double randomPositionX = RandomGenerator.nextDouble() * (this.getWorldWidth() + 1);
 		double randomPositionY = RandomGenerator.nextDouble() * (this.getWorldHeight() + 1);
 
-		Food food = new Food(this, randomPositionX, randomPositionY);
+		Food food = new Food(this, randomPositionX, randomPositionY, 0.20);
 
 		food.setPosX(this.findAdjacentX(food, randomPositionX));
 		food.setPosY(this.findAdjacentY(food, randomPositionY));
@@ -1428,5 +1428,12 @@ public class World
 		if (this.amountOfProjectiles() == 1)
 			return this.getProjectiles().get(0);
 		return null;
+	}
+
+
+	public void removeObject(GameObject gameObject) 
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
