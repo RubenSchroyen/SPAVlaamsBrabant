@@ -10,11 +10,13 @@ package worms.model;
  *		1. Shoot doesn't work (projectiles don't seem to spawn or spawn at bottom, causing stackoverflow when shooting again)	  *																						  *
  *																																  *
  *		2. new team gets instantly removed because there are no worms in it yet													  *		
+ *				- new evidence shows teams do not get removed at all															  *
  *																														  		  *
  *																																  *
  *		LOW PRIORITY																											  *
  *		------------																										      *
- *																															      *
+ *		1. Angle remains zero in superclass MovableObject																		  *
+ *		2. IsValids have to be implemented in the right classes.																  *													      *
  *			 																													  *
  *																																  *
  **********************************************************************************************************************************/
@@ -358,7 +360,7 @@ public class Worm extends MovableObject
 	{
 		if (isValidTurn(newangle) == true )    
 		{
-			super.setAngle(super.getAngle() + newangle);
+			this.setAngle(this.getAngle() + newangle);
 			this.currentAP = this.getCurrentAP() - calculateApCostTurn(Math.abs(newangle - this.angle));    
 		}
 		else
@@ -420,11 +422,8 @@ public class Worm extends MovableObject
 	@Basic @Model
 	public void setAngle(double angle) 
 	{
-		if (angle > Math.PI)
-			angle = Math.PI;
-		if (angle < -Math.PI)
-			angle = -Math.PI;
 		this.angle = angle;
+		super.setAngle(this.angle);
 	}
 
 
@@ -1336,6 +1335,7 @@ public class Worm extends MovableObject
 			super.Jump(delta);
 		}
 		lookForFood();
+		this.setCurrentAP(0);
 	}
 
 

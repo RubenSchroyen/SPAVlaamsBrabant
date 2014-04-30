@@ -54,6 +54,7 @@ public class MovableObject extends GameObject
 	
 	public MovableObject(World world, double posX, double posY, double radius, double angle) {
 		super(world, posX, posY, radius);
+		this.setAngle(angle);
 		
 	}
 
